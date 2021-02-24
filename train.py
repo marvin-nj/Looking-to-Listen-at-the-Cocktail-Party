@@ -12,21 +12,24 @@ import os
 from loss import audio_discriminate_loss2 as audio_loss
 import tensorflow as tf
 import matplotlib.pyplot as plt
+
+from tensorflow.python.client import device_lib
+
 # Resume Model
 resume_state = False
 
 # Parameters
 people_num = 2
-epochs = 10
+epochs = 20
 initial_epoch = 0
-batch_size = 1
+batch_size = 4
 gamma_loss = 0.1
 beta_loss = gamma_loss * 2
 
 # Accelerate Training Process
 workers = 8
 MultiProcess = True
-NUM_GPU = 0
+NUM_GPU = 1
 
 # PATH
 model_path = './saved_AV_models'  # model path
@@ -52,6 +55,7 @@ def scheduler(epoch):
     return lr
 
 
+print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 rlr = LearningRateScheduler(scheduler, verbose=1)
 # format: mix.npy single.npy single.npy
 trainfile = []

@@ -91,10 +91,14 @@ beta_loss = gamma_loss * 2
 - **Then use the script train.py to train**
 
 ------------
-2021.2.24 update:
+2021.2.24 update: 
 1、修复测试及相关文件，能正常运行
-2、建议用conda安装tensorflow环境，否则会找不到GPU
-3、上传一个训练模型，待...
+ 2、建议用conda安装tensorflow环境，否则会找不到GPU 
+ 3、上传一个训练模型，待...
+
+
+
+
 
 Part of the code reference this github [https://github.com/bill9800/speech_separation](https://github.com/bill9800/speech_separation "https://github.com/bill9800/speech_separation")
 

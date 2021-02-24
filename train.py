@@ -22,7 +22,7 @@ resume_state = False
 people_num = 2
 epochs = 20
 initial_epoch = 0
-batch_size = 4
+batch_size = 8     #the maxmium for menmory
 gamma_loss = 0.1
 beta_loss = gamma_loss * 2
 
@@ -40,7 +40,7 @@ folder = os.path.exists(model_path)
 if not folder:
     os.makedirs(model_path)
     print('create folder to save models')
-filepath = model_path + "/AVmodel-" + str(people_num) + "p-{epoch:03d}-{val_loss:.5f}.h5"
+filepath = model_path + "/wmh-AVmodel-" + str(people_num) + "p-{epoch:02d}-{val_loss:.5f}.h5"
 checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True, mode='min')
 
 
@@ -82,7 +82,7 @@ if NUM_GPU > 1:
     adam = optimizers.Adam()
     loss = audio_loss(gamma=gamma_loss, beta=beta_loss, people_num=people_num)
     parallel_model.compile(loss=loss, optimizer=adam)
-    print(AV_model.summary())
+    #print(AV_model.summary())
     history=parallel_model.fit_generator(generator=train_generator,
                                  validation_data=val_generator,
                                  epochs=epochs,
@@ -107,7 +107,7 @@ if NUM_GPU <= 1:
     adam = optimizers.Adam()
     loss = audio_loss(gamma=gamma_loss, beta=beta_loss, people_num=people_num)
     AV_model.compile(optimizer=adam, loss=loss)
-    print(AV_model.summary())
+    #print(AV_model.summary())
     history=AV_model.fit_generator(generator=train_generator,
                            validation_data=val_generator,
                            epochs=epochs,

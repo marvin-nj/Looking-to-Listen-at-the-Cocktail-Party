@@ -4,29 +4,40 @@ from numpy import inf
 import librosa
 
 def stft(data, fft_size=512, step=160, padding=True):
+    print("data: ",data.shape)
     if padding is True:
         pd = np.zeros(192, )
         data = np.concatenate((data, pd), axis=0)
+    print(data.shape)
     windows = np.concatenate((np.zeros((56,)), np.hanning(fft_size - 112), np.zeros((56,))), axis=0)
     windows_num = (len(data) - fft_size) // step
     output = np.ndarray((windows_num, fft_size), dtype=data.dtype)
+    print(output.shape)
     for window in range(windows_num):
         start = int(window * step)
         end = int(start + fft_size)
         output[window] = data[start:end] * windows
+    print(output.shape)
     M = np.fft.rfft(output, axis=1)
+    print("FFT res:",M.shape)
     return M
 
 
 def istft(M, fft_size=512, step=160, padding=True):
-    data = np.fft.ifft(M, axis=-1)
+    print("data: ",M.shape)
+    data = np.fft.irfft(M,axis=-1)
+    print("data: ",data.shape)
     windows = np.concatenate((np.zeros((56,)), np.hanning(fft_size - 112), np.zeros((56,))), axis=0)
     windows_num = M.shape[0]
-    Total = np.zeros((windows * step + fft_size))
+    print("windows:", windows.shape,"windows_num:",windows_num)
+    Total = np.zeros((windows_num * step + fft_size))
+    print("Total: ",Total.shape)
     for i in range(windows_num):
         start = int(i * step)
         end = int(start + fft_size)
-        Total[start:end] = Total[start:end] + data[i:] * windows
+        Total[start:end] =  Total[start:end] + data[i,:] * windows
+        #Total[start:end] = Total[start:end] + data[i:] * windows
+        #Total[start:end] = data[i:] * windows
     if padding == True:
         Total = Total[:48000]
 
@@ -59,6 +70,7 @@ def real_imag_shrink(M, dim='new'):
         M_shrink = M[:, :, 0] + M[:, :, 1] * 1j
     if dim == 'same':
         M_shrink = M[:, ::2] + M[:, 1::2] * 1j
+    print("M_shrink: ",M_shrink.shape)
     return M_shrink
 
 
